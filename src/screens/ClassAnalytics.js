@@ -354,7 +354,7 @@ export default function ClassAnalytics({ route }) {
             </View>
           ))}
         </ScrollView>
-        <ScrollView style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
+        <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
             <Text></Text>
             <Pressable
               style={style.genericButton}
@@ -362,7 +362,7 @@ export default function ClassAnalytics({ route }) {
             >
               <Text style={style.genericButtonText}>Close</Text>
             </Pressable>
-          </ScrollView>
+          </View>
       </Modal>
     );
   };

@@ -45,7 +45,7 @@ export default function Analytics({ navigation }) {
   return (
     <View style={style.container}>
       <View style={style.headerContainerDashboard}>
-        <Text style={style.headerTextStyle}>Your Daddy:</Text>
+        <Text style={style.headerTextStyle}>Your Classes:</Text>
       </View>
       <FlatList
         style={style.recordButton}
