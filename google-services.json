@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "748234155873",
+    "project_id": "labchronicle",
+    "storage_bucket": "labchronicle.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748234155873:android:be160a72ccd9abc66cc720",
+        "android_client_info": {
+          "package_name": "com.ufv.labchronicle"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAE2lFLNdsJ6y4fG9AYZjYcCdF3eIFzvY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
