@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Pressable, Text, View, ScrollView, TextInput, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { Pressable, Modal, Text, View, ScrollView, TextInput, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { MultiSelectComponent, DropdownComponent } from '../components/index.js';
 import { cropItems, observationItems, pestItems, counts, diseaseItems, arthropodItems, healthItems } from '../fieldDefinitions';
 import firebase from 'firebase/compat';
@@ -140,10 +140,12 @@ export default function Records({ route, navigation }) {
   };
 
   return (
+    <Modal>
     <KeyboardAvoidingView
       style={[style.createContainer, { flex: 1 }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
+      <ScrollView>
       <View style={{ marginBottom: 20 }}>
         <ScrollView>
           <View style={{ paddingTop: 8 }}>
@@ -245,6 +247,8 @@ export default function Records({ route, navigation }) {
           </Pressable>
         </ScrollView>
       </View>
+      </ScrollView>
     </KeyboardAvoidingView>
+    </Modal>
   );
 }

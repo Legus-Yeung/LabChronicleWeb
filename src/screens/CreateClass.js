@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, TextInput, Text, Pressable, Alert } from 'react-native';
+import { View, ScrollView, TextInput, Text, Pressable, Alert, Modal } from 'react-native';
 import { DropdownComponent } from '../components/index.js';
 import firebase from 'firebase/compat';
 import style from '../styles.js';
@@ -101,6 +101,14 @@ export default function CreateClass({ route, navigation }) {
     } catch (error) {
       setIsLoading(false);
       console.error('Error saving class:', error);
+      //doesn't want to popup upon error, need to fix!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      return(
+        <Modal>
+          <View style={style.container}>
+            <Text style={style.headerTextStyle}>Shit's fucked dawg</Text>
+          </View>
+        </Modal>
+      );
     }
   };
 

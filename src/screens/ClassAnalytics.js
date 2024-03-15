@@ -21,7 +21,7 @@ const CustomModal = ({ visible, onConfirm, onCancel, message }) => (
   </Modal>
 );
 
-export default function ClassAnalytics({ route }) {
+export default function ClassAnalytics({ route, navigation }) {
   const { classId } = route.params;
   const [userRecords, setUserRecords] = useState([]);
   const [crop, setCrop] = useState([]);
@@ -75,6 +75,10 @@ export default function ClassAnalytics({ route }) {
   const toggleViewUnresolved = () => {
     setViewUnresolved(prevState => !prevState);
   };
+
+  const handleCloseClass = () => {
+    navigation.navigate('Analytics');
+  }
 
   useEffect(() => {
     fetchUserRecords();
@@ -559,56 +563,68 @@ export default function ClassAnalytics({ route }) {
       </Modal>
     );
   };
-
+  //THE MODAL VIEW IS A TEMPORARY FIX FOR WEB AS SCROLLVIEW DOESN"T WORK :3
   return (
-    <ScrollView
-      style={style.createContainer}
-      stickyHeaderIndices={[0]}>
-      <View>
-        <View
-          style={[
-            { flexDirection: 'row' },
-            { justifyContent: 'center' },
-            { backgroundColor: '#FFFFFF' },
-            { paddingVertical: 8 }]}>
-          <Pressable
-            style={style.genericButton}
-            onPress={() => { setNotesVisible(true); }}
-          >
-            <Text style={style.genericButtonText}>Show Notes</Text>
-          </Pressable>
-          {renderNotesPopup()}
+    <Modal>
+      <View style={[{justifyContent: 'space-between'},{alignContent: 'space-between'},{flexDirection: 'column'}, {flex: 1}]}>
+        <ScrollView
+          style={style.createContainer}
+          stickyHeaderIndices={[0]}>
+          <View>
+            <View
+              style={[
+                { flexDirection: 'row' },
+                { justifyContent: 'center' },
+                { backgroundColor: '#FFFFFF' },
+                { paddingVertical: 8 }]}>
+              <Pressable
+                style={style.genericButton}
+                onPress={() => { setNotesVisible(true); }}
+              >
+                <Text style={style.genericButtonText}>Show Notes</Text>
+              </Pressable>
+              {renderNotesPopup()}
 
+              <Pressable
+                style={style.genericButton}
+                onPress={() => { setAllRecordsVisible(true); }}
+              >
+                <Text style={style.genericButtonText}>Show Records</Text>
+              </Pressable>
+              {renderAllRecordsPopup()}
+            </View>
+            <DropdownComponent
+              label='Date range'
+              data={dateRanges}
+              onValueChange={setSelectedDateRange}
+              initialValue={selectedDateRange}
+            />
+          </View>
+
+          <DropdownComponent
+            label='Crop'
+            data={cropItems}
+            onValueChange={setCrop}
+            initialValue={crop}
+          />
+          <MultiSelectComponent
+            placeholder='What summary would you like to view?'
+            data={summaryOpts}
+            onSelectionChange={setSummaryOptions}
+            initialSelected={summaryOptions}
+          />
+          
+          {crop && summaryOptions.length > 0 && renderHist()} 
+        </ScrollView>
+        <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
           <Pressable
             style={style.genericButton}
-            onPress={() => { setAllRecordsVisible(true); }}
+            onPress={() => handleCloseClass()}
           >
-            <Text style={style.genericButtonText}>Show Records</Text>
+            <Text style={style.genericButtonText}>Close</Text>
           </Pressable>
-          {renderAllRecordsPopup()}
         </View>
-        <DropdownComponent
-          label='Date range'
-          data={dateRanges}
-          onValueChange={setSelectedDateRange}
-          initialValue={selectedDateRange}
-        />
       </View>
-
-      <DropdownComponent
-        label='Crop'
-        data={cropItems}
-        onValueChange={setCrop}
-        initialValue={crop}
-      />
-      <MultiSelectComponent
-        placeholder='What summary would you like to view?'
-        data={summaryOpts}
-        onSelectionChange={setSummaryOptions}
-        initialSelected={summaryOptions}
-      />
-
-      {crop && summaryOptions.length > 0 && renderHist()}
-    </ScrollView>
+    </Modal>
   );
 }
