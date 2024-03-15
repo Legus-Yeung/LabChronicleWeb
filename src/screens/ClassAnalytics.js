@@ -5,6 +5,22 @@ import { MultiSelectComponent, Histogram, StackedHist, DropdownComponent } from 
 import firebase from 'firebase/compat';
 import style from '../styles.js';
 
+const CustomModal = ({ visible, onConfirm, onCancel, message }) => (
+  <Modal visible={visible} transparent>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+      <View style={{ width: '80%', backgroundColor: "white", borderRadius: 10, padding: 20, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5 }}>
+        <Text style={{ marginBottom: 20 }}>{message}</Text>
+        <Pressable onPress={onConfirm} style={{ marginBottom: 10, backgroundColor: 'blue', padding: 10, borderRadius: 5, width: '80%', alignItems: 'center' }}>
+          <Text style={{ color: 'white', fontSize: 16 }}>Confirm</Text>
+        </Pressable>
+        <Pressable onPress={onCancel} style={{ backgroundColor: 'gray', padding: 10, borderRadius: 5, width: '80%', alignItems: 'center' }}>
+          <Text style={{ color: 'white', fontSize: 16 }}>Cancel</Text>
+        </Pressable>
+      </View>
+    </View>
+  </Modal>
+);
+
 export default function ClassAnalytics({ route }) {
   const { classId } = route.params;
   const [userRecords, setUserRecords] = useState([]);
@@ -19,6 +35,8 @@ export default function ClassAnalytics({ route }) {
   const [viewRecord, setViewRecord] = useState({});
   const [recordNotes, setRecordNotes] = useState({});
   const [viewUnresolved, setViewUnresolved] = useState(false);
+  const [resolveModalVisible, setResolveModalVisible] = useState(false);
+  const [recordIdToResolve, setRecordIdToResolve] = useState(null);
 
   const toggleCropVisible = (date) => {
     setCropVisible(prevState => ({
@@ -367,30 +385,23 @@ export default function ClassAnalytics({ route }) {
     );
   };
 
-  // Function to handle the resolve button press
   const handleResolve = (recordId) => {
-    // Show a confirmation dialog
-    Alert.alert(
-      'Resolve Alert',
-      'Do you wish to resolve this record?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel'
-        },
-        {
-          text: 'OK',
-          onPress: async () => {
-            // Update the record in the database
-            await firebase.firestore().collection('records').doc(recordId).update({
-              resolved: 'Y'
-            });
-            // Refetch the records
-            fetchUserRecords();
-          }
-        }
-      ]
-    );
+    setRecordIdToResolve(recordId);
+    setResolveModalVisible(true);
+  };
+  
+  const confirmResolve = async () => {
+      try {
+        // Update the record in the database
+        await firebase.firestore().collection('records').doc(recordIdToResolve).update({
+          resolved: 'Y'
+        });
+        // Refetch the records
+        fetchUserRecords();
+      } catch (error) {
+        console.error('Error resolving record: ', error);
+      }
+    setResolveModalVisible(false);
   };
 
   const renderAllRecordsPopup = () => {
@@ -460,6 +471,15 @@ export default function ClassAnalytics({ route }) {
                       >
                         <Text style={style.genericButtonText}>Resolve</Text>
                       </Pressable>
+                      <CustomModal
+                        visible={resolveModalVisible}
+                        message="Do you wish to resolve this record?"
+                        onConfirm={() => {
+                          confirmResolve();
+                          setResolveModalVisible(false); // Close modal after confirmation
+                        }}
+                        onCancel={() => setResolveModalVisible(false)}
+                      />
                     </View>
                   </View>
                 ))}

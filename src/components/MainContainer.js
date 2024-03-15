@@ -35,39 +35,44 @@ export default function MainContainer() {
 
   return (
     <Tab.Navigator
-      initialRouteName={homeName}
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-          let rn = route.name;
-
-          if (rn === homeName) {
-            iconName = focused ? 'home' : 'home-outline';
-          } else if (rn === analyticsName) {
-            iconName = focused ? 'trending-up' : 'trending-up';
-          } else if (rn === settingsName) {
-            iconName = focused ? 'settings' : 'settings-outline';
-          }
-
-          // You can return any component that you like here!
-          return <Ionicons name={iconName} size={size} color={color} />;
+    initialRouteName={homeName}
+    screenOptions={({ route }) => ({
+      headerStyle: {
+        backgroundColor: 'rgb(0,112,60)', // Example background color
+      },
+      headerTintColor: '#fff', // Example text color
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName;
+        let rn = route.name;
+  
+        if (rn === homeName) {
+          iconName = focused ? 'home' : 'home-outline';
+        } else if (rn === analyticsName) {
+          iconName = focused ? 'analytics' : 'analytics-outline';
+        } else if (rn === settingsName) {
+          iconName = focused ? 'settings' : 'settings-outline';
+        }
+  
+        return <Ionicons name={iconName} size={size} color={color} />;
+      },
+      tabBarActiveTintColor: 'rgb(0,112,60)',
+      tabBarInactiveTintColor: 'grey',
+      tabBarLabelStyle: {
+        paddingBottom: 10,
+        fontSize: 10
+      },
+      tabBarStyle: [
+        {
+          display: 'flex',
+          height: 60,
+          padding: 10
         },
-        tabBarActiveTintColor: 'rgb(0,112,60)',
-        tabBarInactiveTintColor: 'grey',
-        tabBarLabelStyle: {
-          paddingBottom: 10,
-          fontSize: 10
-        },
-        tabBarStyle: [
-          {
-            display: 'flex',
-            height: 60,
-            padding: 10
-          },
-          null
-        ]
-      })}>
-
+        null
+      ]
+    })}>
       <Tab.Screen name={homeName} component={Dashboard} />
       {showAnalyticsTab && <Tab.Screen name={analyticsName} component={Analytics} />}
       <Tab.Screen name={settingsName} component={Settings} />

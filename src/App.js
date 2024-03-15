@@ -34,7 +34,7 @@ function MyStack() {
         name='Home'
         component={MainContainer}
         options={
-          { title: 'Home', headerLeft: null }
+          { headerShown: false }
         }
       />
       <Stack.Screen

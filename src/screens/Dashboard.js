@@ -1,14 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Pressable, Alert, ScrollView } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Pressable, Modal } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { cropItems } from '../fieldDefinitions';
 import firebase from 'firebase/compat';
 import style from '../styles.js';
 
+const CustomModal = ({ visible, onConfirm, onCancel, message }) => (
+  <Modal visible={visible} transparent>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+      <View style={{ width: '80%', backgroundColor: "white", borderRadius: 10, padding: 20, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5 }}>
+        <Text style={{ marginBottom: 20 }}>{message}</Text>
+        <Pressable onPress={onConfirm} style={{ marginBottom: 10, backgroundColor: 'blue', padding: 10, borderRadius: 5, width: '80%', alignItems: 'center' }}>
+          <Text style={{ color: 'white', fontSize: 16 }}>Confirm</Text>
+        </Pressable>
+        <Pressable onPress={onCancel} style={{ backgroundColor: 'gray', padding: 10, borderRadius: 5, width: '80%', alignItems: 'center' }}>
+          <Text style={{ color: 'white', fontSize: 16 }}>Cancel</Text>
+        </Pressable>
+      </View>
+    </View>
+  </Modal>
+);
+
 export default function Dashboard({ navigation }) {
   const [displayName, setDisplayName] = useState('');
   const [userRecords, setUserRecords] = useState([]);
   const [isEditing, setIsEditing] = useState(false); // State for edit mode
+  const [DeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [selectedRecordId, setSelectedRecordId] = useState(null);
 
   useEffect(() => {
     // Fetch user's display name
@@ -54,31 +72,20 @@ export default function Dashboard({ navigation }) {
     setIsEditing((prevIsEditing) => !prevIsEditing);
   };
 
+
   const handleDeleteRecord = (recordId) => {
-    // Display a confirmation dialog before deleting the record
-    Alert.alert(
-      'Delete Record',
-      'Are you sure you want to delete this record?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          onPress: async () => {
-            try {
-              await firebase.firestore().collection('records').doc(recordId).delete();
-              console.log('Class deleted successfully');
-            } catch (error) {
-              console.error('Error deleting class:', error);
-            }
-          },
-        },
-      ],
-      { cancelable: false }
-    );
+    setSelectedRecordId(recordId);
+    setDeleteModalVisible(true);
   };
+
+  const confirmDeleteAccount = async () => {
+    try {
+      await firebase.firestore().collection('records').doc(selectedRecordId).delete();
+      console.log('Record deleted successfully');
+    } catch (error) {
+      console.error('Error deleting record:', error);
+    }
+  }
 
   const renderRecordItem = ({ item }) => {
     const matchingItem = cropItems.find((crop) => crop.value === item.crop);
@@ -97,6 +104,15 @@ export default function Dashboard({ navigation }) {
             <Ionicons name='trash-outline' size={30} style={style.deleteIcon} />
           </TouchableOpacity>
         )}
+        <CustomModal
+        visible={DeleteModalVisible}
+        message="Do you wish to delete this record?"
+        onConfirm={() => {
+          confirmDeleteAccount();
+          setDeleteModalVisible(false); // Close modal after confirmation
+        }}
+        onCancel={() => setDeleteModalVisible(false)}
+        />
       </View>
     );
   };
