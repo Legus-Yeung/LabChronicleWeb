@@ -49,6 +49,10 @@ export default function Records({ route, navigation }) {
     })();
   }, [recordId]);
 
+  const handleCloseClass = () => {
+    navigation.navigate('Dashboard');
+  }
+
   const fetchExistingRecord = async (id) => {
     try {
       const recordRef = firebase.firestore().collection('records').doc(id);
@@ -248,6 +252,14 @@ export default function Records({ route, navigation }) {
         </ScrollView>
       </View>
       </ScrollView>
+      <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
+        <Pressable
+          style={style.signupButton}
+          onPress={() => handleCloseClass()}
+        >
+          <Text style={style.signupText}>Return</Text>
+        </Pressable>
+      </View>
     </KeyboardAvoidingView>
     </Modal>
   );

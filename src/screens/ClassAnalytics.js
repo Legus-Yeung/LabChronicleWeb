@@ -382,7 +382,7 @@ export default function ClassAnalytics({ route, navigation }) {
               style={style.genericButton}
               onPress={() => setNotesVisible(false)}
             >
-              <Text style={style.genericButtonText}>Close</Text>
+              <Text style={style.genericButtonText}>Return</Text>
             </Pressable>
           </View>
       </Modal>
@@ -556,7 +556,7 @@ export default function ClassAnalytics({ route, navigation }) {
               style={style.genericButton}
               onPress={() => setAllRecordsVisible(false)}
             >
-              <Text style={style.genericButtonText}>Close</Text>
+              <Text style={style.genericButtonText}>Return</Text>
             </Pressable>
           </View>
         </View>
@@ -621,7 +621,7 @@ export default function ClassAnalytics({ route, navigation }) {
             style={style.genericButton}
             onPress={() => handleCloseClass()}
           >
-            <Text style={style.genericButtonText}>Close</Text>
+            <Text style={style.genericButtonText}>Return</Text>
           </Pressable>
         </View>
       </View>

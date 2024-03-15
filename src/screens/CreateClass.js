@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, TextInput, Text, Pressable, Alert, Modal } from 'react-native';
+import { View, ScrollView, TextInput, Text, Pressable, Modal, Button } from 'react-native';
 import { DropdownComponent } from '../components/index.js';
 import firebase from 'firebase/compat';
 import style from '../styles.js';
+
+const errorText = 'Error:';
 
 export default function CreateClass({ route, navigation }) {
   const { classId } = route.params || {};
@@ -13,6 +15,7 @@ export default function CreateClass({ route, navigation }) {
   const [students, setStudents] = useState('');
   const [userEmails, setUserEmails] = useState([]); // Store fetched user emails
   const [isLoading, setIsLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const semesterItems = [
     { label: 'Fall', value: 'Fall' },
@@ -66,7 +69,8 @@ export default function CreateClass({ route, navigation }) {
     setIsLoading(true);
 
     if (!className || !semester || !year) {
-      Alert.alert('Error', 'Class name, semester and year fields are required');
+      errorText = 'Error: Class name, semester and year fields are required';
+      setModalVisible(true);
       setIsLoading(false);
       return;
     }
@@ -101,14 +105,8 @@ export default function CreateClass({ route, navigation }) {
     } catch (error) {
       setIsLoading(false);
       console.error('Error saving class:', error);
-      //doesn't want to popup upon error, need to fix!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      return(
-        <Modal>
-          <View style={style.container}>
-            <Text style={style.headerTextStyle}>Shit's fucked dawg</Text>
-          </View>
-        </Modal>
-      );
+      errorText = 'Error: Class could not save.';
+      setModalVisible(true);
     }
   };
 
@@ -125,37 +123,57 @@ export default function CreateClass({ route, navigation }) {
   //styling added is temporary, kinda ugly but at least spreads out the year and add student sections
 
   return (
-    <View style={style.analyticsContainer}>
+    <View style={style.container}>
       <ScrollView>
-        <TextInput
-          placeholder='Class Name'
-          value={className}
-          onChangeText={setClassName}
-          style={style.notesInput}
-        />
-        <DropdownComponent
-          label='Semester'
-          data={semesterItems}
-          onValueChange={setSemester}
-          initialValue={semester}
-        />
-        <TextInput
-          placeholder='Year'
-          value={year}
-          onChangeText={setYear}
-          style={style.notesInput}
-          keyboardType='number-pad'
-        />
-        <TextInput
-          placeholder='Add students (comma-separated emails)'
-          value={students}
-          onChangeText={setStudents}
-          style={style.notesInput}
-        />
-        <Text style={[style.inputText, {marginHorizontal: 12}]}>ie. adam@gmail.com, sally@gmail.com, ...</Text>
-        <Pressable style={style.genericButton} onPress={saveClass} disabled={isLoading}>
-          <Text style={style.genericButtonText}>{isLoading ? 'Saving...' : 'Save Class'}</Text>
-        </Pressable>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={style.centeredView}>
+            <View style={style.modalView}>
+              <Text style={style.modalText}>{errorText}</Text>
+              <Button
+                title="Close"
+                onPress={() => setModalVisible(!modalVisible)}
+              />
+            </View>
+          </View>
+        </Modal>
+        <View>
+          <TextInput
+            placeholder='Class Name'
+            value={className}
+            onChangeText={setClassName}
+            style={style.notesInput}
+          />
+          <DropdownComponent
+            label='Semester'
+            data={semesterItems}
+            onValueChange={setSemester}
+            initialValue={semester}
+          />
+          <TextInput
+            placeholder='Year'
+            value={year}
+            onChangeText={setYear}
+            style={style.notesInput}
+            keyboardType='number-pad'
+          />
+          <TextInput
+            placeholder='Add students (comma-separated emails)'
+            value={students}
+            onChangeText={setStudents}
+            style={style.notesInput}
+          />
+          <Text style={[style.inputText, {marginHorizontal: 12}]}>ie. adam@gmail.com, sally@gmail.com, ...</Text>
+          <Pressable style={style.genericButton} onPress={saveClass} disabled={isLoading}>
+            <Text style={style.genericButtonText}>{isLoading ? 'Saving...' : 'Save Class'}</Text>
+          </Pressable>
+        </View>
       </ScrollView>
     </View>
   );

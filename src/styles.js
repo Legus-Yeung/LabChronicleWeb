@@ -45,6 +45,7 @@ const style = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     fontSize: 16,
+    fontWeight: 'bold'
   },
   headerContainerDashboard: {
     flexDirection: 'column',
@@ -130,18 +131,15 @@ const style = StyleSheet.create({
   signupButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 4,
     backgroundColor: 'rgb(200,200,200)',
-    borderColor: 'rgb(200,200,200)',
-    borderWidth: 1,
+    padding: 10,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    marginVertical: 2
   },
   signupText: {
     fontSize: 16,
-    lineHeight: 21,
     fontWeight: 'bold',
-    letterSpacing: 0.25,
     color: 'black',
   },
   subheaderTextStyle: {

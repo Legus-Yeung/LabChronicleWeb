@@ -165,15 +165,15 @@ export default function Settings({ navigation }) {
       />
   
       <Pressable
-        style={style.genericButton}
+        style={[style.genericButton, {backgroundColor: 'rgb(185,0,0)'}]}
         onPress={handleDeleteAccount}>
         <Text style={style.genericButtonText}>Delete Account</Text>
       </Pressable>
   
       <Pressable
-        style={style.genericButton}
+        style={style.signupButton}
         onPress={signOut}>
-        <Text style={style.genericButtonText}>Logout</Text>
+        <Text style={style.signupText}>Logout</Text>
       </Pressable>
   
       <CustomModal
