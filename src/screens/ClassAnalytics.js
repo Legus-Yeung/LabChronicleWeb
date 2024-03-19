@@ -419,7 +419,7 @@ export default function ClassAnalytics({ route, navigation }) {
 
   // Function to find the label by value across all item arrays
   const findLabelByValue = (value) => {
-    const allItems = [...pestItems, ...diseaseItems, ...arthropodItems]; // Combine all your items arrays
+    const allItems = [...pestItems, ...diseaseItems, ...arthropodItems, ...healthItems]; // Combine all your items arrays
     const matchingItem = allItems.find(item => item.value === value);
     return matchingItem ? matchingItem.label : value; // Return the label if found, otherwise return the original value
   };
@@ -561,7 +561,7 @@ export default function ClassAnalytics({ route, navigation }) {
                               </>
                             )}
                             {record.healthObservation && (
-                              <Text style={{ paddingLeft: 5 }}>Health Observation: {record.healthObservation}</Text>
+                              <Text style={{ paddingLeft: 5 }}>Health Observation: {findLabelByValue(record.healthObservation)}</Text>
                             )}
                           </View>
                         ))}
