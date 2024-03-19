@@ -41,14 +41,14 @@ function MyStack() {
         name='Records'
         component={Records}
         options={
-          { title: 'Create Record' }
+          { title: 'Add Record' }
         }
       />
       <Stack.Screen
         name='CreateClass'
         component={CreateClass}
         options={
-          { title: 'Create Class' }
+          { title: 'Class Settings' }
         }
       />
       <Stack.Screen

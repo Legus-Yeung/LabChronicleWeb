@@ -417,6 +417,13 @@ export default function ClassAnalytics({ route, navigation }) {
     setResolveModalVisible(false);
   };
 
+  // Function to find the label by value across all item arrays
+  const findLabelByValue = (value) => {
+    const allItems = [...pestItems, ...diseaseItems, ...arthropodItems]; // Combine all your items arrays
+    const matchingItem = allItems.find(item => item.value === value);
+    return matchingItem ? matchingItem.label : value; // Return the label if found, otherwise return the original value
+  };
+
   const renderAllRecordsPopup = () => {
     // Filter for unresolved records where originallyInPerimeter and inPerimeter are empty and not resolved
     const unresolvedRecords = userRecords.filter(record =>
@@ -526,7 +533,7 @@ export default function ClassAnalytics({ route, navigation }) {
                                 <View style={style.listBorderLeft}>
                                   {record.pests.map((pest, pestIndex) => (
                                     <Text key={pestIndex} style={{ paddingLeft: 5 }}>
-                                      {pest}
+                                      {findLabelByValue(pest)}
                                       {record[`${pest}Count`] ? `: ${record[`${pest}Count`]}` : ''}
                                     </Text>
                                   ))}
@@ -538,7 +545,7 @@ export default function ClassAnalytics({ route, navigation }) {
                                 <Text style={{ paddingLeft: 5 }}>Diseases:</Text>
                                 <View style={style.listBorderLeft}>
                                   {record.diseases.map((disease, diseaseIndex) => (
-                                    <Text key={diseaseIndex} style={{ paddingLeft: 5 }}>{disease}</Text>
+                                    <Text key={diseaseIndex} style={{ paddingLeft: 5 }}>{findLabelByValue(disease)}</Text>
                                   ))}
                                 </View>
                               </>
@@ -548,7 +555,7 @@ export default function ClassAnalytics({ route, navigation }) {
                                 <Text style={{ paddingLeft: 5 }}>Beneficial Arthropods:</Text>
                                 <View style={style.listBorderLeft}>
                                   {record.arthropodBeneficials.map((arthropod, arthropodIndex) => (
-                                    <Text key={arthropodIndex} style={{ paddingLeft: 5 }}>{arthropod}</Text>
+                                    <Text key={arthropodIndex} style={{ paddingLeft: 5 }}>{findLabelByValue(arthropod)}</Text>
                                   ))}
                                 </View>
                               </>

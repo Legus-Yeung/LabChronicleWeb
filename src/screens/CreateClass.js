@@ -4,7 +4,7 @@ import { DropdownComponent } from '../components/index.js';
 import firebase from 'firebase/compat';
 import style from '../styles.js';
 
-const errorText = 'Error:';
+let errorText = 'Error:';
 
 export default function CreateClass({ route, navigation }) {
   const { classId } = route.params || {};
@@ -69,7 +69,7 @@ export default function CreateClass({ route, navigation }) {
     setIsLoading(true);
 
     if (!className || !semester || !year) {
-      errorText = 'Error: Class name, semester and year fields are required';
+      errorText = 'Error:\nClass name, semester and year fields are required.';
       setModalVisible(true);
       setIsLoading(false);
       return;
@@ -105,7 +105,7 @@ export default function CreateClass({ route, navigation }) {
     } catch (error) {
       setIsLoading(false);
       console.error('Error saving class:', error);
-      errorText = 'Error: Class could not save.';
+      errorText = 'Error:\nClass cannot be saved, student email(s) not found.\nMake sure student emails are registered first.';
       setModalVisible(true);
     }
   };
@@ -169,7 +169,7 @@ export default function CreateClass({ route, navigation }) {
             onChangeText={setStudents}
             style={style.notesInput}
           />
-          <Text style={[style.inputText, {marginHorizontal: 12}]}>ie. adam@gmail.com, sally@gmail.com, ...</Text>
+          <Text style={[style.inputText, {marginHorizontal: 12}]}>adam@student.ufv.ca, sally@student.ufv.ca, ...{'\n'}Emails are not case-sensitive.</Text>
           <Pressable style={style.genericButton} onPress={saveClass} disabled={isLoading}>
             <Text style={style.genericButtonText}>{isLoading ? 'Saving...' : 'Save Class'}</Text>
           </Pressable>
