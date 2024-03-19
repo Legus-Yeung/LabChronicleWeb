@@ -37,12 +37,16 @@ export default function MainContainer() {
     <Tab.Navigator
     initialRouteName={homeName}
     screenOptions={({ route }) => ({
+      headerTitleAlign: 'center',
       headerStyle: {
         backgroundColor: 'rgb(0,112,60)', // Example background color
       },
+      justifyContent: 'center', 
+      height: 60, 
       headerTintColor: '#fff', // Example text color
       headerTitleStyle: {
         fontWeight: 'bold',
+        fontSize: 20,
       },
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;

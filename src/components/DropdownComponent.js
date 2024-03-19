@@ -36,7 +36,7 @@ const DropdownComponent = ({ data, label, onValueChange, initialValue }) => {
     <View style={styles.container}>
       {renderLabel()}
       <Dropdown
-        style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+        style={[styles.dropdown, isFocus && { borderColor: '' }]}
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
@@ -52,14 +52,14 @@ const DropdownComponent = ({ data, label, onValueChange, initialValue }) => {
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={handleValueChange}
-        renderLeftIcon={() => (
-          <AntDesign
-            style={styles.icon}
-            color={isFocus ? 'blue' : 'black'}
-            name='Safety'
-            size={20}
-          />
-        )}
+        // renderLeftIcon={() => (
+        //   <AntDesign
+        //     style={styles.icon}
+        //     color={isFocus ? 'blue' : 'black'}
+        //     name='Safety'
+        //     size={20}
+        //   />
+        // )}
       />
     </View>
   );

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Text, Modal, Pressable, Alert } from 'react-native';
+import { View, ScrollView, Text, Modal, Pressable, TouchableOpacity } from 'react-native';
 import { cropItems, pestItems, diseaseItems, arthropodItems, counts, healthItems, summaryOpts, dateRanges } from '../fieldDefinitions';
-import { MultiSelectComponent, Histogram, StackedHist, DropdownComponent } from '../components/index.js';
+import { MultiSelectComponent, Histogram, StackedHist, DropdownComponent, ModalHeader } from '../components/index.js';
+import { Ionicons } from '@expo/vector-icons';
 import firebase from 'firebase/compat';
 import style from '../styles.js';
 
@@ -37,6 +38,7 @@ export default function ClassAnalytics({ route, navigation }) {
   const [viewUnresolved, setViewUnresolved] = useState(false);
   const [resolveModalVisible, setResolveModalVisible] = useState(false);
   const [recordIdToResolve, setRecordIdToResolve] = useState(null);
+  const [className, setClassName] = useState();
 
   const toggleCropVisible = (date) => {
     setCropVisible(prevState => ({
@@ -94,6 +96,7 @@ export default function ClassAnalytics({ route, navigation }) {
       const classData = classDoc.data();
       const studentUids = classData.students;
       const profUid = classData.prof;
+      setClassName(classData.className);
 
       if (!studentUids) {
         console.error(`No 'students' field found in classroom document with id: ${classId}`);
@@ -346,10 +349,16 @@ export default function ClassAnalytics({ route, navigation }) {
     // Render the popup
     return (
       <Modal visible={notesVisible} onRequestClose={() => setNotesVisible(false)}>
+        <View style={{ position: 'absolute', top: 17, left: 10, zIndex: 10 }}>
+          <TouchableOpacity onPress={() => setNotesVisible(false)}>
+            <Ionicons name="arrow-back" size={23} color="white" />
+          </TouchableOpacity>
+        </View>
+        <ModalHeader title={`${className} Notes`}/>
         <ScrollView contentContainerStyle={{flexGrow: 1}} style={{paddingHorizontal: 15}}>
-          <View style={{paddingTop: 20}}>
+          {/* <View style={{paddingTop: 20}}>
             <Text style={style.headerTextStyle}>Student Notes</Text>
-          </View>
+          </View> */}
           {Object.entries(groupedRecords).map(([date, crops]) => (
             <View key={date}>
               <Pressable onPress={() => toggleCropVisible(date)}>
@@ -376,7 +385,7 @@ export default function ClassAnalytics({ route, navigation }) {
             </View>
           ))}
         </ScrollView>
-        <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
+        {/* <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
             <Text></Text>
             <Pressable
               style={style.genericButton}
@@ -384,7 +393,7 @@ export default function ClassAnalytics({ route, navigation }) {
             >
               <Text style={style.genericButtonText}>Return</Text>
             </Pressable>
-          </View>
+          </View> */}
       </Modal>
     );
   };
@@ -442,11 +451,17 @@ export default function ClassAnalytics({ route, navigation }) {
     //
     return (
       <Modal visible={allRecordsVisible} onRequestClose={() => setAllRecordsVisible(false)}>
+        <View style={{ position: 'absolute', top: 17, left: 10, zIndex: 10 }}>
+          <TouchableOpacity onPress={() => setAllRecordsVisible(false)}>
+            <Ionicons name="arrow-back" size={23} color="white" />
+          </TouchableOpacity>
+        </View>
+        <ModalHeader title={`${className} Records`}/>
         <View style={[{justifyContent: 'space-between'},{alignContent: 'space-between'},{flexDirection: 'column'}, {flex: 1}]}>
           <ScrollView contentContainerStyle={{flexGrow: 1}} style={{paddingHorizontal: 15}}>
-            <View style={{paddingTop: 20}}>
+            {/* <View style={{paddingTop: 20}}>
               <Text style={style.headerTextStyle}>Records</Text>
-            </View>
+            </View> */}
             {/* Display Unresolved Records */}
             {unresolvedRecords.length > 0 && (
               <>
@@ -490,7 +505,7 @@ export default function ClassAnalytics({ route, navigation }) {
               </>
             )}
             {/* Display Resolved or Other Records */}
-            {Object.entries(groupedRecords).sort(([dateA], [dateB]) => new Date(dateA) - new Date(dateB)).map(([date, crops]) => (
+            {Object.entries(groupedRecords).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA)).map(([date, crops]) => (
               <View key={date}>
                 <Pressable onPress={() => toggleViewRecord(date)}>
                   <Text style={style.headerTextStyle}>{date}</Text>
@@ -551,14 +566,14 @@ export default function ClassAnalytics({ route, navigation }) {
             ))}
             
           </ScrollView>
-          <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
+          {/* <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
             <Pressable
               style={style.genericButton}
               onPress={() => setAllRecordsVisible(false)}
             >
               <Text style={style.genericButtonText}>Return</Text>
             </Pressable>
-          </View>
+          </View> */}
         </View>
       </Modal>
     );
@@ -566,6 +581,12 @@ export default function ClassAnalytics({ route, navigation }) {
   //THE MODAL VIEW IS A TEMPORARY FIX FOR WEB AS SCROLLVIEW DOESN"T WORK :3
   return (
     <Modal>
+      <View style={{ position: 'absolute', top: 17, left: 10, zIndex: 10 }}>
+        <TouchableOpacity onPress={() => handleCloseClass()}>
+          <Ionicons name="arrow-back" size={23} color="white" />
+        </TouchableOpacity>
+      </View>
+      <ModalHeader title={`${className} Analytics`}/>
       <View style={[{justifyContent: 'space-between'},{alignContent: 'space-between'},{flexDirection: 'column'}, {flex: 1}]}>
         <ScrollView
           style={style.createContainer}
@@ -616,14 +637,14 @@ export default function ClassAnalytics({ route, navigation }) {
           
           {crop && summaryOptions.length > 0 && renderHist()} 
         </ScrollView>
-        <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
+        {/* <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
           <Pressable
             style={style.genericButton}
             onPress={() => handleCloseClass()}
           >
             <Text style={style.genericButtonText}>Return</Text>
           </Pressable>
-        </View>
+        </View> */}
       </View>
     </Modal>
   );

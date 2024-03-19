@@ -36,14 +36,14 @@ const MultiSelectComponent = ({ data, placeholder, onSelectionChange, initialSel
         searchPlaceholder='Search...'
         value={selected}
         onChange={handleSelectionChange}
-        renderLeftIcon={() => (
-          <AntDesign
-            style={styles.icon}
-            color='black'
-            name='Safety'
-            size={20}
-          />
-        )}
+        // renderLeftIcon={() => (
+        //   <AntDesign
+        //     style={styles.icon}
+        //     color='black'
+        //     name='Safety'
+        //     size={20}
+        //   />
+        // )}
         selectedStyle={styles.selectedStyle}
       />
     </View>

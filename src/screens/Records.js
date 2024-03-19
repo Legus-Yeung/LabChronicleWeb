@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Pressable, Modal, Text, View, ScrollView, TextInput, KeyboardAvoidingView, Platform, Alert } from 'react-native';
-import { MultiSelectComponent, DropdownComponent } from '../components/index.js';
+import { Pressable, Modal, Text, View, ScrollView, TextInput, KeyboardAvoidingView, Platform, Alert, TouchableOpacity } from 'react-native';
+import { MultiSelectComponent, DropdownComponent, ModalHeader } from '../components/index.js';
 import { cropItems, observationItems, pestItems, counts, diseaseItems, arthropodItems, healthItems } from '../fieldDefinitions';
+import { Ionicons } from '@expo/vector-icons';
 import firebase from 'firebase/compat';
 import * as Location from 'expo-location';
 import style from '../styles.js';
@@ -145,10 +146,16 @@ export default function Records({ route, navigation }) {
 
   return (
     <Modal>
-    <KeyboardAvoidingView
-      style={[style.createContainer, { flex: 1 }]}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+      <View style={{ position: 'absolute', top: 17, left: 10, zIndex: 10 }}>
+        <TouchableOpacity onPress={() => handleCloseClass()}>
+          <Ionicons name="arrow-back" size={23} color="white" />
+        </TouchableOpacity>
+      </View>
+      <ModalHeader title="Add Record" />
+      <KeyboardAvoidingView
+        style={[style.createContainer, { flex: 1 }]}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
       <ScrollView>
       <View style={{ marginBottom: 20 }}>
         <ScrollView>
@@ -252,14 +259,14 @@ export default function Records({ route, navigation }) {
         </ScrollView>
       </View>
       </ScrollView>
-      <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
+      {/* <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
         <Pressable
           style={style.signupButton}
           onPress={() => handleCloseClass()}
         >
           <Text style={style.signupText}>Return</Text>
         </Pressable>
-      </View>
+      </View> */}
     </KeyboardAvoidingView>
     </Modal>
   );
