@@ -28,7 +28,7 @@ export default function RegistrationScreen({ navigation }) {
   //this should probably send to a new screen
   const handleEmailSignup = async () => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email.toLowerCase(), password);
       const uid = userCredential.user.uid;
 
       const db = getFirestore(firebase);
@@ -39,7 +39,7 @@ export default function RegistrationScreen({ navigation }) {
       const emailSnapshot = await getDocs(emailQuery);
 
       if (emailSnapshot.empty) {
-        await setDoc(userRef, { email: email, name: name, role: 'student' });
+        await setDoc(userRef, { email: email.toLowerCase(), name: name, role: 'student' });
         await updateProfile(auth.currentUser, { displayName: name });
         console.log('User signed up:', userCredential.user);
 

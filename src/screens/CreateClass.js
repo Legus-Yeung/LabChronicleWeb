@@ -112,7 +112,7 @@ export default function CreateClass({ route, navigation }) {
 
   const fetchUserUid = async (email) => {
     try {
-      const querySnapshot = await firebase.firestore().collection('users').where('email', '==', email).get();
+      const querySnapshot = await firebase.firestore().collection('users').where('email', '==', email.toLowerCase()).get();
       if (!querySnapshot.empty) {
         return querySnapshot.docs[0].id;
       }
