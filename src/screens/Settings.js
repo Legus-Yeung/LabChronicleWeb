@@ -6,7 +6,7 @@ import style from '../styles.js';
 
 const CustomModal = ({ visible, onConfirm, onCancel, message }) => (
   <Modal visible={visible} transparent>
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
       <View style={{ width: '80%', backgroundColor: "white", borderRadius: 10, padding: 20, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5 }}>
         <Text style={{ marginBottom: 20 }}>{message}</Text>
         <Pressable onPress={onConfirm} style={{ marginBottom: 10, backgroundColor: 'blue', padding: 10, borderRadius: 5, width: '80%', alignItems: 'center' }}>
