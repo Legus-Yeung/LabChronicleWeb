@@ -48,14 +48,16 @@ export default function Dashboard({ navigation }) {
             id: doc.id,
             ...doc.data(),
           }));
-          fetchedRecords.sort((a, b) => b.location.timestamp.toDate() - a.location.timestamp.toDate());
-          setUserRecords(fetchedRecords);
+          fetchedRecords.sort((a, b) => {
+            if (!a.location || !b.location) return 0; // Or handle null locations differently
+            return b.location.timestamp.toDate() - a.location.timestamp.toDate();
+          });
+          setUserRecords(fetchedRecords); // Update the state with fetched records
         },
         (error) => {
           console.error('Error fetching user records:', error);
         }
       );
-
       // Clean up the listener when the component unmounts
       return () => unsubscribe();
     };
@@ -124,6 +126,10 @@ export default function Dashboard({ navigation }) {
 
   // Group records by date
   const groupedRecords = userRecords.reduce((groups, record) => {
+    if (!record.location) {
+      // Handle records with null location differently, e.g., skip or put in a 'No Date' group
+      return groups;
+    }
     const dateKey = record.location.timestamp.toDate().toLocaleString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
     if (!groups[dateKey]) {
       groups[dateKey] = { date: dateKey, data: [] };
