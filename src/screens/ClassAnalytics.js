@@ -409,17 +409,18 @@ export default function ClassAnalytics({ route, navigation }) {
   };
   
   const confirmResolve = async () => {
+    if (recordIdToResolve) { 
       try {
-        // Update the record in the database
         await firebase.firestore().collection('records').doc(recordIdToResolve).update({
           resolved: 'Y'
         });
-        // Refetch the records
         fetchUserRecords();
       } catch (error) {
         console.error('Error resolving record: ', error);
       }
+    }
     setResolveModalVisible(false);
+    setRecordIdToResolve(null);
   };
 
   // Function to find the label by value across all item arrays
@@ -504,9 +505,7 @@ export default function ClassAnalytics({ route, navigation }) {
                       </Pressable>
                       <CustomModal
                         visible={resolveModalVisible}
-                        onConfirm={() => {
-                          setResolveModalVisible(false);
-                        }}
+                        onConfirm={confirmResolve}
                         onCancel={() => setResolveModalVisible(false)}
                         message="Do you wish to resolve this record?"
                       />

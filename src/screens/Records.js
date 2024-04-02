@@ -92,6 +92,8 @@ export default function Records({ route, navigation }) {
       return;
     }
 
+    const timestamp = new Date();
+
     const record = {
       crop,
       observations,
@@ -104,6 +106,7 @@ export default function Records({ route, navigation }) {
       arthropodBeneficials,
       healthObservation,
       uid: firebase.auth().currentUser.uid,
+      timestamp,
       lastLocation: currentLocation,
       location: location || currentLocation,
       originallyInPerimeter: originallyInPerimeter || inPerimeter, // if false, big bad
