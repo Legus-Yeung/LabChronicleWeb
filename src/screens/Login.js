@@ -17,6 +17,7 @@ export default function LoginScreen({ navigation }) {
   const imageWidth = dimensions.width;
   //const imageHeight = dimensions.height;
 
+  // If the user has an existing session, redirect home
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
@@ -32,6 +33,7 @@ export default function LoginScreen({ navigation }) {
     navigation.navigate('Registration');
   };
 
+  // Login haha
   const handleEmailLogin = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -52,7 +54,7 @@ export default function LoginScreen({ navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView>
-      <Modal
+        <Modal
           animationType="fade"
           transparent={true}
           visible={modalVisible}
@@ -70,7 +72,7 @@ export default function LoginScreen({ navigation }) {
             </View>
           </View>
         </Modal>
-        <View style={[{paddingBottom: 5},{marginBottom: 5}]}>
+        <View style={[{ paddingBottom: 5 }, { marginBottom: 5 }]}>
           <Image
             style={{ width: '100%' }}
             resizeMode='contain'

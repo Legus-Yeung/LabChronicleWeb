@@ -1,25 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Pressable, Modal } from 'react-native';
+import { CustomModal } from '../components/index.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { cropItems } from '../fieldDefinitions';
 import firebase from 'firebase/compat';
 import style from '../styles.js';
-
-const CustomModal = ({ visible, onConfirm, onCancel, message }) => (
-  <Modal visible={visible} transparent>
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
-      <View style={{ width: '80%', backgroundColor: "white", borderRadius: 10, padding: 20, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5 }}>
-        <Text style={{ marginBottom: 20 }}>{message}</Text>
-        <Pressable onPress={onConfirm} style={{ marginBottom: 10, backgroundColor: 'blue', padding: 10, borderRadius: 5, width: '80%', alignItems: 'center' }}>
-          <Text style={{ color: 'white', fontSize: 16 }}>Confirm</Text>
-        </Pressable>
-        <Pressable onPress={onCancel} style={{ backgroundColor: 'gray', padding: 10, borderRadius: 5, width: '80%', alignItems: 'center' }}>
-          <Text style={{ color: 'white', fontSize: 16 }}>Cancel</Text>
-        </Pressable>
-      </View>
-    </View>
-  </Modal>
-);
 
 export default function Dashboard({ navigation }) {
   const [displayName, setDisplayName] = useState('');
@@ -89,6 +74,7 @@ export default function Dashboard({ navigation }) {
     }
   }
 
+  // Render each record item on the dashboard
   const renderRecordItem = ({ item }) => {
     const matchingItem = cropItems.find((crop) => crop.value === item.crop);
     const label = matchingItem ? matchingItem.label : item.crop;
@@ -107,13 +93,13 @@ export default function Dashboard({ navigation }) {
           </TouchableOpacity>
         )}
         <CustomModal
-        visible={DeleteModalVisible}
-        message="Do you wish to delete this record?"
-        onConfirm={() => {
-          confirmDeleteAccount();
-          setDeleteModalVisible(false); // Close modal after confirmation
-        }}
-        onCancel={() => setDeleteModalVisible(false)}
+          visible={DeleteModalVisible}
+          message="Do you wish to delete this record?"
+          onConfirm={() => {
+            confirmDeleteAccount();
+            setDeleteModalVisible(false); // Close modal after confirmation
+          }}
+          onCancel={() => setDeleteModalVisible(false)}
         />
       </View>
     );

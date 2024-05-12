@@ -30,6 +30,7 @@ export default function CreateClass({ route, navigation }) {
     }
   }, [classId]);
 
+  // Try to fetch the class data
   const fetchExistingClass = async (id) => {
     try {
       const classRef = firebase.firestore().collection('classroom').doc(id);
@@ -54,6 +55,7 @@ export default function CreateClass({ route, navigation }) {
     }
   };
 
+  // Get the user emails to display in the students field
   const fetchUserEmail = async (uid) => {
     try {
       const doc = await firebase.firestore().collection('users').doc(uid).get();
@@ -65,6 +67,7 @@ export default function CreateClass({ route, navigation }) {
     }
   };
 
+  // Save the classroom and convert the emails to user ids
   const saveClass = async () => {
     setIsLoading(true);
 
@@ -110,6 +113,7 @@ export default function CreateClass({ route, navigation }) {
     }
   };
 
+  // Fetech the user ID associated with an email
   const fetchUserUid = async (email) => {
     try {
       const querySnapshot = await firebase.firestore().collection('users').where('email', '==', email.toLowerCase()).get();
@@ -169,7 +173,7 @@ export default function CreateClass({ route, navigation }) {
             onChangeText={setStudents}
             style={style.notesInput}
           />
-          <Text style={[style.inputText, {marginHorizontal: 12}]}>adam@student.ufv.ca, sally@student.ufv.ca, ...{'\n'}Emails are not case-sensitive.</Text>
+          <Text style={[style.inputText, { marginHorizontal: 12 }]}>adam@student.ufv.ca, sally@student.ufv.ca, ...{'\n'}Emails are not case-sensitive.</Text>
           <Pressable style={style.genericButton} onPress={saveClass} disabled={isLoading}>
             <Text style={style.genericButtonText}>{isLoading ? 'Saving...' : 'Save Class'}</Text>
           </Pressable>

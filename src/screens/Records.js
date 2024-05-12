@@ -27,6 +27,7 @@ export default function Records({ route, navigation }) {
   const [inPerimeter, setInPerimeter] = useState('');
   const [originallyInPerimeter, setOriginallyInPerimeter] = useState('');
 
+  // Get user's current location to match with the perimeter.
   useEffect(() => {
     if (recordId) {
       fetchExistingRecord(recordId);
@@ -54,6 +55,7 @@ export default function Records({ route, navigation }) {
     navigation.navigate('Dashboard');
   }
 
+  // Get existing records when editing a record
   const fetchExistingRecord = async (id) => {
     try {
       const recordRef = firebase.firestore().collection('records').doc(id);
@@ -83,6 +85,7 @@ export default function Records({ route, navigation }) {
     }
   };
 
+  // Save
   const saveRecord = async () => {
     setIsLoading(true);
 
@@ -159,110 +162,110 @@ export default function Records({ route, navigation }) {
         style={[style.createContainer, { flex: 1 }]}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-      <ScrollView>
-      <View style={{ marginBottom: 20 }}>
         <ScrollView>
-          <View style={{ paddingTop: 8 }}>
-            <DropdownComponent
-              label='Crop'
-              data={cropItems}
-              onValueChange={setCrop}
-              initialValue={crop}
-            />
+          <View style={{ marginBottom: 20 }}>
+            <ScrollView>
+              <View style={{ paddingTop: 8 }}>
+                <DropdownComponent
+                  label='Crop'
+                  data={cropItems}
+                  onValueChange={setCrop}
+                  initialValue={crop}
+                />
+              </View>
+              <MultiSelectComponent
+                placeholder='What observations did you make?'
+                data={observationItems}
+                onSelectionChange={setObservations}
+                initialSelected={observations}
+              />
+
+              {observations.includes('pests') && (
+                <MultiSelectComponent
+                  placeholder='Select pests'
+                  data={pestItems}
+                  onSelectionChange={setPests}
+                  initialSelected={pests}
+                />
+              )}
+
+              {pests.includes('spiderMites') && (
+                <DropdownComponent
+                  label='Number of spider mites'
+                  data={counts}
+                  onValueChange={setSpiderMitesCount}
+                  initialValue={spiderMitesCount}
+                />
+              )}
+
+              {pests.includes('aphids') && (
+                <DropdownComponent
+                  label='Number of aphids'
+                  data={counts}
+                  onValueChange={setAphidsCount}
+                  initialValue={aphidsCount}
+                />
+              )}
+
+              {pests === 'thrips' && (
+                <DropdownComponent
+                  label='Number of thrips'
+                  data={counts}
+                  onValueChange={setThripsCount}
+                  initialValue={thripsCount}
+                />
+              )}
+
+              {pests === 'caterpillars' && (
+                <DropdownComponent
+                  label='Number of caterpillars'
+                  data={counts}
+                  onValueChange={setCaterpillarsCount}
+                  initialValue={caterpillarsCount}
+                />
+              )}
+
+              {observations.includes('diseases') && (
+                <MultiSelectComponent
+                  placeholder='Select diseases'
+                  data={diseaseItems}
+                  onSelectionChange={setDiseases}
+                  initialSelected={diseases}
+                />
+              )}
+
+              {observations.includes('beneficial') && (
+                <MultiSelectComponent
+                  placeholder='Arthropod beneficials spotted'
+                  data={arthropodItems}
+                  onSelectionChange={setArthropodBeneficials}
+                  initialSelected={arthropodBeneficials}
+                />
+              )}
+
+              <DropdownComponent
+                label='Crop health status'
+                data={healthItems}
+                onValueChange={setHealthObservation}
+                initialValue={healthObservation}
+              />
+              <TextInput
+                placeholder='Put your notes here student!'
+                value={notes}
+                style={style.notesInput}
+                onChangeText={setNotes}
+              />
+              <Pressable
+                style={style.genericButton}
+                onPress={saveRecord}
+                disabled={isLoading}
+              >
+                <Text style={style.genericButtonText}>{isLoading ? 'Saving...' : 'Save Record'}</Text>
+              </Pressable>
+            </ScrollView>
           </View>
-          <MultiSelectComponent
-            placeholder='What observations did you make?'
-            data={observationItems}
-            onSelectionChange={setObservations}
-            initialSelected={observations}
-          />
-
-          {observations.includes('pests') && (
-            <MultiSelectComponent
-              placeholder='Select pests'
-              data={pestItems}
-              onSelectionChange={setPests}
-              initialSelected={pests}
-            />
-          )}
-
-          {pests.includes('spiderMites') && (
-            <DropdownComponent
-              label='Number of spider mites'
-              data={counts}
-              onValueChange={setSpiderMitesCount}
-              initialValue={spiderMitesCount}
-            />
-          )}
-
-          {pests.includes('aphids') && (
-            <DropdownComponent
-              label='Number of aphids'
-              data={counts}
-              onValueChange={setAphidsCount}
-              initialValue={aphidsCount}
-            />
-          )}
-
-          {pests === 'thrips' && (
-            <DropdownComponent
-              label='Number of thrips'
-              data={counts}
-              onValueChange={setThripsCount}
-              initialValue={thripsCount}
-            />
-          )}
-
-          {pests === 'caterpillars' && (
-            <DropdownComponent
-              label='Number of caterpillars'
-              data={counts}
-              onValueChange={setCaterpillarsCount}
-              initialValue={caterpillarsCount}
-            />
-          )}
-
-          {observations.includes('diseases') && (
-            <MultiSelectComponent
-              placeholder='Select diseases'
-              data={diseaseItems}
-              onSelectionChange={setDiseases}
-              initialSelected={diseases}
-            />
-          )}
-
-          {observations.includes('beneficial') && (
-            <MultiSelectComponent
-              placeholder='Arthropod beneficials spotted'
-              data={arthropodItems}
-              onSelectionChange={setArthropodBeneficials}
-              initialSelected={arthropodBeneficials}
-            />
-          )}
-
-          <DropdownComponent
-            label='Crop health status'
-            data={healthItems}
-            onValueChange={setHealthObservation}
-            initialValue={healthObservation}
-          />
-          <TextInput
-            placeholder='Put your notes here student!'
-            value={notes}
-            style={style.notesInput}
-            onChangeText={setNotes}
-          />
-          <Pressable
-            style={style.genericButton}
-            onPress={saveRecord}
-            disabled={isLoading}
-          >
-            <Text style={style.genericButtonText}>{isLoading ? 'Saving...' : 'Save Record'}</Text>
-          </Pressable>
         </ScrollView>
-      </View>
-      </ScrollView>
-      {/* <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
+        {/* <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
         <Pressable
           style={style.signupButton}
           onPress={() => handleCloseClass()}
@@ -270,7 +273,7 @@ export default function Records({ route, navigation }) {
           <Text style={style.signupText}>Return</Text>
         </Pressable>
       </View> */}
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }

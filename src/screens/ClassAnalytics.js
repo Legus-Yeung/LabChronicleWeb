@@ -14,8 +14,8 @@ export default function ClassAnalytics({ route, navigation }) {
   const [notesVisible, setNotesVisible] = useState(false);
   const [selectedDateRange, setSelectedDateRange] = useState(null);
   const [allRecordsVisible, setAllRecordsVisible] = useState(false);
-  const [cropVisible, setCropVisible] = useState({});
-  const [cropNotesVisible, setCropNotesVisible] = useState({});
+  const [cropView, setCropView] = useState({});
+  const [cropNotes, setCropNotes] = useState({});
   const [viewRecord, setViewRecord] = useState({});
   const [recordNotes, setRecordNotes] = useState({});
   const [viewUnresolved, setViewUnresolved] = useState(false);
@@ -23,21 +23,10 @@ export default function ClassAnalytics({ route, navigation }) {
   const [recordIdToResolve, setRecordIdToResolve] = useState(null);
   const [className, setClassName] = useState();
 
-  // These
-  const toggleCropVisible = (date) => {
-    setCropVisible(prevState => ({
+  const toggleCropView = (date) => {
+    setCropView(prevState => ({
       ...prevState,
       [date]: !prevState[date]
-    }));
-  };
-
-  const toggleCropNotesVisible = (date, crop) => {
-    setCropNotesVisible(prevState => ({
-      ...prevState,
-      [date]: {
-        ...(prevState[date] || {}), // Ensure cropNotesVisible[date] is initialized as an object
-        [crop]: !((prevState[date] || {})[crop]) // Toggle the visibility of crop notes
-      }
     }));
   };
 
@@ -54,6 +43,16 @@ export default function ClassAnalytics({ route, navigation }) {
       [date]: {
         ...(prevState[date] || {}),
         [crop]: !((prevState[date] || {})[crop])
+      }
+    }));
+  };
+
+  const toggleCropNotes = (date, crop) => {
+    setCropNotes(prevState => ({
+      ...prevState,
+      [date]: {
+        ...(prevState[date] || {}), // Ensure cropNotes[date] is initialized as an object
+        [crop]: !((prevState[date] || {})[crop]) // Toggle the visibility of crop notes
       }
     }));
   };
@@ -202,6 +201,7 @@ export default function ClassAnalytics({ route, navigation }) {
     }
   };
 
+  // Preparing data to be passed to the stackedhist component
   const prepareStackedHistData = (selectedCategory, selectedCrop) => {
     const matchingItem = summaryOpts.find(summaryOpts => summaryOpts.value === selectedCategory);
     const title = matchingItem ? matchingItem.label : selectedCategory;
@@ -243,6 +243,7 @@ export default function ClassAnalytics({ route, navigation }) {
     return { title, countLabels, countLegend, countData, countShortNames, presenceLabels, presenceLegend, presenceData, presenceShortNames };
   };
 
+  // Render stacked and non stacked
   const renderHist = () => {
     return summaryOptions.map(option => {
       if (option === 'healthObservations') {
@@ -351,17 +352,17 @@ export default function ClassAnalytics({ route, navigation }) {
           </View> */}
           {Object.entries(groupedRecords).map(([date, crops]) => (
             <View key={date}>
-              <Pressable onPress={() => toggleCropVisible(date)}>
+              <Pressable onPress={() => toggleCropView(date)}>
                 <Text style={style.headerTextStyle}>{date}</Text>
               </Pressable>
               <View style={style.listBorderLeft}>
-                {cropVisible[date] && Object.entries(crops).map(([crop, records]) => (
+                {cropView[date] && Object.entries(crops).map(([crop, records]) => (
                   <View key={crop}>
-                    <Pressable onPress={() => toggleCropNotesVisible(date, crop)}>
+                    <Pressable onPress={() => toggleCropNotes(date, crop)}>
                       <Text style={style.subheaderTextStyle}>{crop}</Text>
                     </Pressable>
                     <View style={style.listBorderLeft}>
-                      {cropNotesVisible[date] && cropNotesVisible[date][crop] &&
+                      {cropNotes[date] && cropNotes[date][crop] &&
                         records.filter(record => record.notes && record.notes.trim() !== '')
                           .map((record, index) => (
                             <Text key={index} style={{ paddingLeft: 5 }}>
