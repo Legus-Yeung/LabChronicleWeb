@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
 
 const DropdownComponent = ({ data, label, onValueChange, initialValue }) => {
   const [value, setValue] = useState(null);
@@ -12,6 +11,7 @@ const DropdownComponent = ({ data, label, onValueChange, initialValue }) => {
     setValue(initialValue || null);
   }, [initialValue]);
 
+  //adds a label to the dropdown if one is given during initialization
   const renderLabel = () => {
     if (value || isFocus) {
       return (
@@ -23,6 +23,7 @@ const DropdownComponent = ({ data, label, onValueChange, initialValue }) => {
     return null;
   };
 
+  //handles the change of a value to a selected item
   const handleValueChange = (item) => {
     setValue(item.value);
     setIsFocus(false);
@@ -32,6 +33,7 @@ const DropdownComponent = ({ data, label, onValueChange, initialValue }) => {
     }
   };
 
+  //draws the component onto the screen
   return (
     <View style={styles.container}>
       {renderLabel()}
@@ -52,14 +54,6 @@ const DropdownComponent = ({ data, label, onValueChange, initialValue }) => {
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={handleValueChange}
-        // renderLeftIcon={() => (
-        //   <AntDesign
-        //     style={styles.icon}
-        //     color={isFocus ? 'blue' : 'black'}
-        //     name='Safety'
-        //     size={20}
-        //   />
-        // )}
       />
     </View>
   );

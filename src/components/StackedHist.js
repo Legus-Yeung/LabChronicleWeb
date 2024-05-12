@@ -5,13 +5,15 @@ import { StackedBarChart } from 'react-native-chart-kit';
 const screenWidth = Dimensions.get('window').width;
 
 const StackedHist = ({ data, legend, labels, barColors, title, shortNameLegend }) => {
+  
+  //constant that contains the data for the stacked bar chart
   const chartData = {
     labels: labels,
     legend: legend,
     data: data,
     barColors: barColors,
   };
-
+  
   return (
     <View>
       <Text style={styles.title}>{title}</Text>

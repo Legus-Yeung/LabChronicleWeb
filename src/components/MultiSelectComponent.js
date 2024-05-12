@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { MultiSelect } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
 
 const MultiSelectComponent = ({ data, placeholder, onSelectionChange, initialSelected }) => {
   const [selected, setSelected] = useState([]);
@@ -11,6 +10,7 @@ const MultiSelectComponent = ({ data, placeholder, onSelectionChange, initialSel
     setSelected(initialSelected || null);
   }, [initialSelected]);
 
+  //handles the change of selecting a different item
   const handleSelectionChange = (items) => {
     setSelected(items);
 
@@ -36,14 +36,6 @@ const MultiSelectComponent = ({ data, placeholder, onSelectionChange, initialSel
         searchPlaceholder='Search...'
         value={selected}
         onChange={handleSelectionChange}
-        // renderLeftIcon={() => (
-        //   <AntDesign
-        //     style={styles.icon}
-        //     color='black'
-        //     name='Safety'
-        //     size={20}
-        //   />
-        // )}
         selectedStyle={styles.selectedStyle}
       />
     </View>
