@@ -3,9 +3,11 @@ import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import firebase from 'firebase/compat';
 import style from '../styles.js';
 
+// This screen is to select the class you wish to view analytics for
 export default function Analytics({ navigation }) {
   const [userClasses, setUserClasses] = useState([]);
 
+  // In the useEffect, we find classes which are connected to the current prof user, then we sort these classes by year and semeseter
   useEffect(() => {
     const currentUserUid = firebase.auth().currentUser.uid;
     const query = firebase.firestore().collection('classroom').where('prof', '==', currentUserUid);
@@ -31,6 +33,7 @@ export default function Analytics({ navigation }) {
     return () => unsubscribe(); // Cleanup the subscription when the component unmounts
   }, []);
 
+  // This renders each of the classes on the screen as clickable boxes
   const renderItem = ({ item }) => (
     <TouchableOpacity style={style.input} onPress={() => handleClassPress(item)}>
       <Text style={style.inputText}>{`${item.year} ${item.semester} - ${item.className}`}</Text>

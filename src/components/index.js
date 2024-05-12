@@ -7,3 +7,5 @@ export { default as MultiSelectComponent } from './MultiSelectComponent';
 export { default as StackedHist } from './StackedHist';
 
 export { default as ModalHeader } from './ModalHeader';
+
+export { default as CustomModal } from './CustomModal';

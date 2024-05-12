@@ -1,26 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Text, Modal, Pressable, TouchableOpacity } from 'react-native';
 import { cropItems, pestItems, diseaseItems, arthropodItems, counts, healthItems, summaryOpts, dateRanges } from '../fieldDefinitions';
-import { MultiSelectComponent, Histogram, StackedHist, DropdownComponent, ModalHeader } from '../components/index.js';
+import { MultiSelectComponent, Histogram, StackedHist, DropdownComponent, ModalHeader, CustomModal } from '../components/index.js';
 import { Ionicons } from '@expo/vector-icons';
 import firebase from 'firebase/compat';
 import style from '../styles.js';
-
-const CustomModal = ({ visible, onConfirm, onCancel, message }) => (
-  <Modal visible={visible} transparent>
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
-      <View style={{ width: '80%', backgroundColor: "white", borderRadius: 10, padding: 20, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5 }}>
-        <Text style={{ marginBottom: 20 }}>{message}</Text>
-        <Pressable onPress={onConfirm} style={{ marginBottom: 10, backgroundColor: 'blue', padding: 10, borderRadius: 5, width: '80%', alignItems: 'center' }}>
-          <Text style={{ color: 'white', fontSize: 16 }}>Confirm</Text>
-        </Pressable>
-        <Pressable onPress={onCancel} style={{ backgroundColor: 'gray', padding: 10, borderRadius: 5, width: '80%', alignItems: 'center' }}>
-          <Text style={{ color: 'white', fontSize: 16 }}>Cancel</Text>
-        </Pressable>
-      </View>
-    </View>
-  </Modal>
-);
 
 export default function ClassAnalytics({ route, navigation }) {
   const { classId } = route.params;
@@ -39,6 +23,7 @@ export default function ClassAnalytics({ route, navigation }) {
   const [recordIdToResolve, setRecordIdToResolve] = useState(null);
   const [className, setClassName] = useState();
 
+  // These
   const toggleCropVisible = (date) => {
     setCropVisible(prevState => ({
       ...prevState,
@@ -96,12 +81,12 @@ export default function ClassAnalytics({ route, navigation }) {
       const studentUids = classData.students;
       const profUid = classData.prof;
       setClassName(classData.className);
-  
+
       if (!studentUids) {
         console.error(`No 'students' field found in classroom document with id: ${classId}`);
         return;
       }
-  
+
       // Fetch user names for students
       const studentNamePromises = studentUids.map(async (uid) => {
         const userDoc = await firebase.firestore().collection('users').doc(uid).get();
@@ -112,34 +97,34 @@ export default function ClassAnalytics({ route, navigation }) {
           return { uid, name: 'Unknown' }; // Provide a default name if user document not found
         }
       });
-  
+
       // Fetch user name for professor
       const profNamePromise = firebase.firestore().collection('users').doc(profUid).get();
       const profNameResult = await profNamePromise;
       const profName = profNameResult.exists ? profNameResult.data().name : 'Unknown';
-  
+
       const studentNames = await Promise.all(studentNamePromises);
       const profRecord = { uid: profUid, name: profName };
-  
+
       const studentQueries = studentNames.map(({ uid }) =>
         firebase.firestore().collection('records').where('uid', '==', uid).get()
       );
-  
+
       const profQuery = firebase.firestore().collection('records').where('uid', '==', profUid).get();
-  
+
       const queries = [...studentQueries, profQuery];
       const recordSnapshots = await Promise.all(queries);
       const records = recordSnapshots.flatMap((snapshot, index) =>
         snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data(), name: index < studentNames.length ? studentNames[index].name : profRecord.name }))
       );
-  
-      
+
+
       records.sort((a, b) => {
         const dateA = a.location?.timestamp.toDate() ?? new Date(0); // Fallback to epoch if null
         const dateB = b.location?.timestamp.toDate() ?? new Date(0); // Fallback to epoch if null
         return dateB - dateA;
       });
-  
+
       setUserRecords(records);
     } catch (error) {
       console.error('Error fetching user records: ', error);
@@ -150,7 +135,7 @@ export default function ClassAnalytics({ route, navigation }) {
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
-  
+
     return userRecords.filter(record => {
       const recordDate = record.location?.timestamp.toDate();
       return recordDate && recordDate >= startDate && recordDate <= endDate;
@@ -359,8 +344,8 @@ export default function ClassAnalytics({ route, navigation }) {
             <Ionicons name="arrow-back" size={23} color="white" />
           </TouchableOpacity>
         </View>
-        <ModalHeader title={`${className} Notes`}/>
-        <ScrollView contentContainerStyle={{flexGrow: 1}} style={{paddingHorizontal: 15}}>
+        <ModalHeader title={`${className} Notes`} />
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ paddingHorizontal: 15 }}>
           {/* <View style={{paddingTop: 20}}>
             <Text style={style.headerTextStyle}>Student Notes</Text>
           </View> */}
@@ -407,9 +392,9 @@ export default function ClassAnalytics({ route, navigation }) {
     setRecordIdToResolve(recordId);
     setResolveModalVisible(true);
   };
-  
+
   const confirmResolve = async () => {
-    if (recordIdToResolve) { 
+    if (recordIdToResolve) {
       try {
         await firebase.firestore().collection('records').doc(recordIdToResolve).update({
           resolved: 'Y'
@@ -469,9 +454,9 @@ export default function ClassAnalytics({ route, navigation }) {
             <Ionicons name="arrow-back" size={23} color="white" />
           </TouchableOpacity>
         </View>
-        <ModalHeader title={`${className} Records`}/>
-        <View style={[{justifyContent: 'space-between'},{alignContent: 'space-between'},{flexDirection: 'column'}, {flex: 1}]}>
-          <ScrollView contentContainerStyle={{flexGrow: 1}} style={{paddingHorizontal: 15}}>
+        <ModalHeader title={`${className} Records`} />
+        <View style={[{ justifyContent: 'space-between' }, { alignContent: 'space-between' }, { flexDirection: 'column' }, { flex: 1 }]}>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ paddingHorizontal: 15 }}>
             {/* <View style={{paddingTop: 20}}>
               <Text style={style.headerTextStyle}>Records</Text>
             </View> */}
@@ -574,7 +559,7 @@ export default function ClassAnalytics({ route, navigation }) {
                 </View>
               </View>
             ))}
-            
+
           </ScrollView>
           {/* <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
             <Pressable
@@ -596,8 +581,8 @@ export default function ClassAnalytics({ route, navigation }) {
           <Ionicons name="arrow-back" size={23} color="white" />
         </TouchableOpacity>
       </View>
-      <ModalHeader title={`${className} Analytics`}/>
-      <View style={[{justifyContent: 'space-between'},{alignContent: 'space-between'},{flexDirection: 'column'}, {flex: 1}]}>
+      <ModalHeader title={`${className} Analytics`} />
+      <View style={[{ justifyContent: 'space-between' }, { alignContent: 'space-between' }, { flexDirection: 'column' }, { flex: 1 }]}>
         <ScrollView
           style={style.createContainer}
           stickyHeaderIndices={[0]}>
@@ -644,8 +629,8 @@ export default function ClassAnalytics({ route, navigation }) {
             onSelectionChange={setSummaryOptions}
             initialSelected={summaryOptions}
           />
-          
-          {crop && summaryOptions.length > 0 && renderHist()} 
+
+          {crop && summaryOptions.length > 0 && renderHist()}
         </ScrollView>
         {/* <View style={{justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 5}}>
           <Pressable
