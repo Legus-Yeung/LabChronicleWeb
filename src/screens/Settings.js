@@ -1,24 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Pressable, Modal } from 'react-native';
+import { CustomModal } from '../components/index.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import firebase from 'firebase/compat';
 import style from '../styles.js';
-
-const CustomModal = ({ visible, onConfirm, onCancel, message }) => (
-  <Modal visible={visible} transparent>
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
-      <View style={{ width: '80%', backgroundColor: "white", borderRadius: 10, padding: 20, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5 }}>
-        <Text style={{ marginBottom: 20 }}>{message}</Text>
-        <Pressable onPress={onConfirm} style={{ marginBottom: 10, backgroundColor: 'blue', padding: 10, borderRadius: 5, width: '80%', alignItems: 'center' }}>
-          <Text style={{ color: 'white', fontSize: 16 }}>Confirm</Text>
-        </Pressable>
-        <Pressable onPress={onCancel} style={{ backgroundColor: 'gray', padding: 10, borderRadius: 5, width: '80%', alignItems: 'center' }}>
-          <Text style={{ color: 'white', fontSize: 16 }}>Cancel</Text>
-        </Pressable>
-      </View>
-    </View>
-  </Modal>
-);
 
 export default function Settings({ navigation }) {
   const [profOptions, setProfOptions] = useState(false); // State for professor options visibility
@@ -28,6 +13,7 @@ export default function Settings({ navigation }) {
   const [deleteAccountModalVisible, setDeleteAccountModalVisible] = useState(false);
   const [selectedClassId, setSelectedClassId] = useState(null); // Optional: if you need to track which class is being deleted
 
+  // This does the cool thing of getting the users and checking if they're an elite member (prof)
   useEffect(() => {
     const currentUser = firebase.auth().currentUser;
 
@@ -43,6 +29,7 @@ export default function Settings({ navigation }) {
       });
     }
 
+    // Fetch that prof class and show em what it be
     const fetchUserClasses = () => {
       const userId = currentUser.uid;
       const userClassesRef = firebase.firestore().collection('classroom');
@@ -64,21 +51,25 @@ export default function Settings({ navigation }) {
     fetchUserClasses();
   }, []);
 
+  // Idk, does some cool funky stuff and send you to login
   const signOut = () => {
     firebase.auth().signOut().then(() => {
       navigation.navigate('Login');
     });
   };
 
+  // You wanna create a class, wow
   const handleClassPress = (classId) => {
     navigation.navigate('CreateClass', { classId });
   };
 
+  // Delete that class you're so proud of. Do it.
   const handleDeleteClass = (classId) => {
     setSelectedClassId(classId); // Optional: if you need to track which class is being deleted
     setDeleteClassModalVisible(true);
   };
 
+  // Are you sure you really wanna delete?
   const confirmDeleteClass = async () => {
     try {
       await firebase.firestore().collection('classroom').doc(selectedClassId).delete();
@@ -89,28 +80,30 @@ export default function Settings({ navigation }) {
     setDeleteClassModalVisible(false);
   };
 
+  // unlimited POWAR
   const handleDeleteAccount = () => {
     setDeleteAccountModalVisible(true);
   };
 
+  // Dew it
   const confirmDeleteAccount = async () => {
     try {
       // Step 1: Delete Classes
       const classQuerySnapshot = await firebase.firestore().collection('classroom').where('prof', '==', firebase.auth().currentUser.uid).get();
       const classDeletePromises = classQuerySnapshot.docs.map(doc => doc.ref.delete());
       await Promise.all(classDeletePromises);
-  
+
       // Step 2: Delete Records
       const recordQuerySnapshot = await firebase.firestore().collection('records').where('uid', '==', firebase.auth().currentUser.uid).get();
       const recordDeletePromises = recordQuerySnapshot.docs.map(doc => doc.ref.delete());
       await Promise.all(recordDeletePromises);
-  
+
       // Step 3: Delete User Document
       await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).delete();
-  
+
       // Step 4: Delete Authentication Record
       await firebase.auth().currentUser.delete();
-  
+
       console.log('Account deleted successfully');
       navigation.navigate('Login'); // Navigate to the login screen after deletion
     } catch (error) {
@@ -134,7 +127,7 @@ export default function Settings({ navigation }) {
           <Text style={style.genericButtonText}>Create New Class</Text>
         </Pressable>
       )}
-  
+
       {profOptions && (
         <View style={[{ flexDirection: 'row' }, { justifyContent: 'space-between' }]}>
           <Text style={style.textStyle}>Your Classes:</Text>
@@ -163,19 +156,19 @@ export default function Settings({ navigation }) {
         )}
         keyExtractor={(item) => item.id}
       />
-  
+
       <Pressable
-        style={[style.genericButton, {backgroundColor: 'rgb(185,0,0)'}]}
+        style={[style.genericButton, { backgroundColor: 'rgb(185,0,0)' }]}
         onPress={handleDeleteAccount}>
         <Text style={style.genericButtonText}>Delete Account</Text>
       </Pressable>
-  
+
       <Pressable
         style={style.signupButton}
         onPress={signOut}>
         <Text style={style.signupText}>Logout</Text>
       </Pressable>
-  
+
       <CustomModal
         visible={deleteClassModalVisible}
         message="Are you sure you want to delete this class?"
@@ -185,7 +178,7 @@ export default function Settings({ navigation }) {
         }}
         onCancel={() => setDeleteClassModalVisible(false)}
       />
-  
+
       <CustomModal
         visible={deleteAccountModalVisible}
         message="Are you sure you want to delete your account? This action is irreversible."
