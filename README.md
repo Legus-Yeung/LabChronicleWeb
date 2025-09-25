@@ -147,10 +147,6 @@ The application stores data in Firebase Firestore with the following structure:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🎓 Educational Use
 
 LabChronicleWeb is specifically designed for educational purposes at UFV. The application supports:
@@ -161,7 +157,7 @@ LabChronicleWeb is specifically designed for educational purposes at UFV. The ap
 
 ## 📞 Support
 
-For support, email [your-email@ufv.ca] or create an issue in this repository.
+For support, email [legus.yeung@gmail.com] or create an issue in this repository.
 
 ## 🔄 Version History
 
